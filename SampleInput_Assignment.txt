@@ -1,0 +1,129 @@
+/* Load the DatabaseFile.pl and the Assignment.pl before giving the inputs. */
+
+_________________________________________________
+
+(1)INPUT:- 
+
+incoming_packet(adapter("A"),ethernet(protocol_id("arp"),vlan_no(18)),ipv4(ip_src_address("34.62.58.24"),ip_dst_address("254.46.5.34"),tcp_udp_src_port(12),tcp_udp_dst_port(21),icmp(icmp_type(2),icmp_message("Redirect")),ip_protocol_no(1))).
+
+|    .
+
+OUTPUT :- 
+
+Accepted Adapter :A
+Accepted protocol_id :arp
+Accepted  vlan_no :18
+Accepted src ipaddress :34.62.58.24
+Accepted dst ipaddress :254.46.5.34
+Accepted tcp_udp_src_port :12
+Accepted tcp_udp_dst_port :21
+Accepted icmp type :2
+Accepted icmp message :Redirect
+Accepted IP_protocol_no :1
+
+PACKET ACCEPTED
+true.
+
+_________________________________________________
+
+(2)INPUT(Shows preference- Rejected>(Dropped and Accepted):-
+
+incoming_packet(adapter("X"),ethernet(protocol_id("arp"),vlan_no(18)),ipv4(ip_src_address("34.62.58.24"),ip_dst_address("254.46.5.34"),tcp_udp_src_port(12),tcp_udp_dst_port(21),icmp(icmp_type(2),icmp_message("Timestamp Request")),ip_protocol_no(4))).
+
+|    .
+
+OUTPUT :-
+
+Rejected Adapter:X
+Accepted protocol_id :arp
+Accepted  vlan_no :18
+Accepted src ipaddress :34.62.58.24
+Accepted dst ipaddress :254.46.5.34
+Accepted tcp_udp_src_port :12
+Accepted tcp_udp_dst_port :21
+Accepted icmp type :2
+Dropped icmp message:Timestamp Request
+Rejected IP_protocol_no :4
+
+PACKET REJECTED 
+true.
+
+_________________________________________________
+
+(3)INPUT:
+
+incoming_packet(adapterv6("A"),ethernetv6(protocol_idv6("arp"),vlan_no_v6(18)),ipv6(ipv6_src_address("2001:0000:9d38:6ab8:1c48:3a1c:a95a:b1c2"),ipv6_dst_address("2041:0000:130F:0000:0000:07C0:853A:140C"),tcp_udp_src_port_v6(12),tcp_udp_dst_port_v6(21),icmpv6(icmpv6_type(2),icmpv6_message("Echo Reply acceptv6")),ip_protocol_no_v6(23))).
+
+OUTPUT:
+Accepted Adapter :A
+Accepted  VLAN No :18
+Accepted Protocol-ID :arp
+Accepted SOURCE IP-Address :2001:0000:9d38:6ab8:1c48:3a1c:a95a:b1c2
+Accepted DESTINATION IP-Address :2041:0000:130F:0000:0000:07C0:853A:140C
+Accepted TCP-UDP-Source Port :12
+Accepted TCP-UDP-DST Port :21
+Accepted ICMPV6 type :2
+Accepted ICMPV6 Message :Echo Reply acceptv6
+Accepted IP-Protocol_No :23
+
+PACKET ACCEPTED
+true.
+
+
+(4) INPUT (False output when any one of the value does not match with the database):- 
+
+incoming_packet(adapter("A"),ethernet(protocol_id("arp"),vlan_no(18)),ipv4(ip_src_address("34.62.58.24"),ip_dst_address("254.46.5.34"),tcp_udp_src_port(12),tcp_udp_dst_port(21),icmp(icmp_type(2),icmp_message("Redirect")),ip_protocol_no(1000))).
+
+OUTPUT:-
+
+Accepted Adapter :A
+Accepted protocol_id :arp
+Accepted  vlan_no :18
+Accepted src ipaddress :34.62.58.24
+Accepted dst ipaddress :254.46.5.34
+Accepted tcp_udp_src_port :12
+Accepted tcp_udp_dst_port :21
+Accepted icmp type :2
+Accepted icmp message :Redirect
+false.
+
+_________________________________________________
+
+(5) INPUT(When any of the value is given blank, it is rejected):-
+
+incoming_packet(adapter("A"),ethernet(protocol_id("arp"),vlan_no(_)),ipv4(ip_src_address("34.62.58.24"),ip_dst_address("254.46.5.34"),tcp_udp_src_port(12),tcp_udp_dst_port(_),icmp(icmp_type(2),icmp_message("Redirect")),ip_protocol_no(1))).
+
+OUTPUT :-
+
+Accepted Adapter :A
+Accepted protocol_id :arp
+Rejected vlan_no :24
+Accepted src ipaddress :34.62.58.24
+Accepted dst ipaddress :254.46.5.34
+Accepted tcp_udp_src_port :12
+Rejected tcp_udp_dst_port :34
+Accepted icmp type :2
+Accepted icmp message :Redirect
+Accepted IP_protocol_no :1
+
+PACKET REJECTED 
+true.
+
+(6)INPUT(When protocol id is in the dropped and accepted clause):
+
+incoming_packet(adapterv6("A"),ethernetv6(protocol_idv6("arp"),vlan_no_v6(18)),ipv6(ipv6_src_address("2001:0000:9938:6668:1148:3311:1955:5113"),ipv6_dst_address("2001:0000:9938:6668:1148:3311:1955:5112"),tcp_udp_src_port_v6(12),tcp_udp_dst_port_v6(21),icmpv6(icmpv6_type(2),icmpv6_message("Echo Reply acceptv6")),ip_protocol_no_v6(13))).
+
+OUTPUT:
+Accepted Adapter :A
+Accepted  VLAN No :18
+Accepted Protocol-ID :arp
+Accepted SOURCE IP-Address :2001:0000:9938:6668:1148:3311:1955:5113
+Accepted DESTINATION IP-Address :2001:0000:9938:6668:1148:3311:1955:5112
+Accepted TCP-UDP-Source Port :12
+Accepted TCP-UDP-DST Port :21
+Accepted ICMPV6 type :2
+Accepted ICMPV6 Message :Echo Reply acceptv6
+Dropped IP-Protocol_No :13
+
+PACKET DROPPED
+true.
